@@ -80,7 +80,7 @@ final class FunctionScopeIsolatingVisitorTest extends PHPUnit_Framework_TestCase
         /* @var $node Node */
         $node = $this->getMock(Node::class);
 
-        $this->wrappedVisitor->expects($this->once())->method('enterNode')->with($node);
+        $this->wrappedVisitor->expects(self::once())->method('enterNode')->with($node);
         $this->visitor->enterNode($node);
     }
 
@@ -104,5 +104,28 @@ final class FunctionScopeIsolatingVisitorTest extends PHPUnit_Framework_TestCase
         $this->wrappedVisitor->expects(self::once())->method('leaveNode')->with($nodeIn)->willReturn($nodeOut);
 
         self::assertSame($nodeOut, $this->visitor->leaveNode($nodeIn));
+    }
+
+    /**
+     * @dataProvider subScopeNodesProvider
+     */
+    public function testWillEnterAndExitNodeEvenWhenEnteringAClosureNode(Node $subScopeNode)
+    {
+        $nodeOut1 = $this->getMock(Node::class);
+        $nodeOut2 = $this->getMock(Node::class);
+
+        $this->wrappedVisitor->expects(self::once())->method('enterNode')->with($subScopeNode)->willReturn($nodeOut1);
+        $this->wrappedVisitor->expects(self::once())->method('leaveNode')->with($subScopeNode)->willReturn($nodeOut2);
+
+        $this->assertSame($nodeOut1, $this->visitor->enterNode($subScopeNode));
+        $this->assertSame($nodeOut2, $this->visitor->leaveNode($subScopeNode));
+    }
+
+    public function subScopeNodesProvider() : array
+    {
+        return [
+            'anonymous function' => [new Expr\Closure()],
+            'anonymous class'    => [new Node\Stmt\Class_(null)],
+        ];
     }
 }
