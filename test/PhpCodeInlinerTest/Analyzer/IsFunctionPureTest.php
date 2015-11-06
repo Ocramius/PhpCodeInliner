@@ -97,6 +97,9 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'function with by-ref parameter being overwritten' => [function (& $baz) {
                 $baz = 'foo';
             }],
+            'function with by-ref use statement being overwritten' => [function () use (& $baz) {
+                $baz = 'foo';
+            }],
         ];
     }
 
