@@ -85,11 +85,11 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
         bool $mayCauseSideEffects,
         array $variableTypes,
         string $varName,
-        Node $operation = null
+        Node ...$operations
     ) {
         self::assertSame(
             $mayCauseSideEffects,
-            VariableAccess::fromVariableAndOperation(new Variable($varName), $operation)
+            VariableAccess::fromVariableAndOperation(new Variable($varName), ...$operations)
                 ->canCauseSideEffects($variableTypes)
         );
     }
