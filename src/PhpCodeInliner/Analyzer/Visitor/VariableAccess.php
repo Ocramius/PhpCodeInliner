@@ -53,4 +53,23 @@ final class VariableAccess
     {
         return new self($variable, $operation);
     }
+
+    /**
+     * @param string[] $variableTypes indexed by variable name
+     *
+     * @return bool
+     */
+    public function canCauseSideEffects(array $variableTypes) : bool
+    {
+        return true;
+    }
+
+    private function isScalarType(array $variableTypes) : bool
+    {
+        if (! isset($variableTypes[$this->variable->name])) {
+            return false;
+        }
+
+        return in_array(strtolower($variableTypes[$this->variable->name]), ['int', 'float', 'string', 'bool'], true);
+    }
 }
