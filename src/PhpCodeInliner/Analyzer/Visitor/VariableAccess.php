@@ -61,6 +61,14 @@ final class VariableAccess
      */
     public function canCauseSideEffects(array $variableTypes) : bool
     {
+        if (null === $this->operation) {
+            return false;
+        }
+
+        if ($this->operation instanceof Node\Expr\Cast\String_ && $this->isScalarType($variableTypes)) {
+            return false;
+        }
+
         return true;
     }
 
