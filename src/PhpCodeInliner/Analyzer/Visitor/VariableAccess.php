@@ -25,6 +25,7 @@ use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Return_;
+use PhpParser\Node\Stmt\StaticVar;
 use PhpParser\NodeVisitorAbstract;
 
 /**
@@ -37,7 +38,7 @@ final class VariableAccess
     const SCALAR_TYPES = ['array', 'int', 'float', 'string', 'bool'];
 
     /**
-     * @var Variable|Node\Stmt\StaticVar
+     * @var Variable|StaticVar
      */
     private $variable;
 
@@ -49,8 +50,8 @@ final class VariableAccess
     /**
      * VariableAccess constructor.
      *
-     * @param Variable|Node\Stmt\StaticVar $variable
-     * @param Node|null                    $operation
+     * @param Variable|StaticVar $variable
+     * @param Node|null          $operation
      */
     private function __construct($variable, Node $operation = null)
     {
@@ -58,8 +59,25 @@ final class VariableAccess
         $this->operation = $operation;
     }
 
-    public static function fromVariableAndOperation(Variable $variable, Node $operation = null)
+    /**
+     * @param Variable|StaticVar $variable
+     * @param Node|null          $operation
+     *
+     * @return self
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function fromVariableAndOperation($variable, Node $operation = null)
     {
+        if (! ($variable instanceof Variable || $variable instanceof StaticVar)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Provided $variable must be one of %s or %s, %s given',
+                Variable::class,
+                StaticVar::class,
+                is_object($variable) ? get_class($variable) : gettype($variable)
+            ));
+        }
+
         return new self($variable, $operation);
     }
 
