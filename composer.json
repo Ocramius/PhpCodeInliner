@@ -1,0 +1,40 @@
+{
+    "name":              "roave/php-code-inliner",
+    "description":       "PHP code preprocessor that takes functions/methods/classes and inlines the method calls wherever possible",
+    "type":              "library",
+    "license":           "MIT",
+    "homepage":          "https://github.com/Roave/PhpCodeInliner",
+    "keywords":          [
+        "code inliner",
+        "performance",
+        "code generation",
+        "compile"
+    ],
+    "authors": [
+        {
+            "name":     "Marco Pivetta",
+            "email":    "ocramius@gmail.com",
+            "homepage": "http://ocramius.github.io/"
+        }
+    ],
+    "require": {
+        "php": "~7.0"
+    },
+    "require-dev": {
+      "ext-phar":                    "*",
+      "phpunit/phpunit":             "~4.0",
+      "squizlabs/php_codesniffer":   "~2.0",
+      "couscous/couscous":           "dev-master@DEV"
+    },
+    "autoload": {
+        "psr-0": {
+            "PhpCodeInliner\\": "src/PhpCodeInliner"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpCodeInlinerTest\\":      "test/PhpCodeInlinerTest",
+            "PhpCodeInlinerTestAsset\\": "test/PhpCodeInlinerTestAsset"
+        }
+    }
+}
