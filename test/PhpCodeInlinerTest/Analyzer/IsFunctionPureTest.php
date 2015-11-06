@@ -58,8 +58,6 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             }],
             'empty function with parameters' => [function (int $foo, int $bar) {
             }],
-            'empty function with by-ref parameters' => [function (int & $foo, int & $bar) {
-            }],
             'empty function with use statement' => [function (int & $foo, int & $bar) use ($baz) {
             }],
             'function with constant return value' => [function () {
@@ -150,6 +148,8 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
         $baz = null;
 
         return [
+            'function with by-ref parameters' => [function (int & $foo, int & $bar) {
+            }],
             'function with return value being a by-ref use statement parameter' => [function () use (& $baz) {
                 return $baz;
             }],
@@ -258,4 +258,14 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
     {
         return $a + $b;
     }
+
+//    public function testFoo()
+//    {
+//        $ast = (new ParserFactory())
+//            ->create(ParserFactory::ONLY_PHP7)
+//            ->parse('<?php $foo = $bar->baz; $bar->baz = $foo;');
+//
+//        var_dump($ast);
+//        die();
+//    }
 }
