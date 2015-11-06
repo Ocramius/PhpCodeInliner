@@ -210,6 +210,9 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'method call on object type' => [function (\stdClass $foo) {
                 $foo->bar();
             }],
+            'access to $_GLOBAL' => [function (\stdClass $foo) {
+                $GLOBALS;
+            }],
         ];
     }
 
