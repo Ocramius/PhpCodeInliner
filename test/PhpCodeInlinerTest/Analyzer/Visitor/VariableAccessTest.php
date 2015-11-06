@@ -134,6 +134,12 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 'foo',
                 new Expr\PropertyFetch(new Variable('foo'), 'bar'),
             ],
+            'property fetch expression, scalar type (explicit)' => [
+                true,
+                ['foo' => 'int'],
+                'foo',
+                new Expr\PropertyFetch(new Variable('foo'), 'bar'),
+            ],
         ];
     }
 }
