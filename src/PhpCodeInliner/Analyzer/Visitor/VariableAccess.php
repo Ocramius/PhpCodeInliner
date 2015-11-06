@@ -104,18 +104,13 @@ final class VariableAccess
         }
 
         if (
-            (
-                $lastOperation instanceof Node\Expr\BinaryOp\Concat
-                || $lastOperation instanceof Node\Expr\AssignOp\Concat
-            )
-            && ! $isScalar) {
+            ($lastOperation instanceof Node\Expr\BinaryOp\Concat || $lastOperation instanceof Node\Expr\AssignOp\Concat)
+            && ! $isScalar
+        ) {
             return true;
         }
 
-        if (
-            $lastOperation instanceof Node\Expr\BinaryOp
-            || $lastOperation instanceof Node\Expr\AssignOp
-        ) {
+        if ($lastOperation instanceof Node\Expr\BinaryOp || $lastOperation instanceof Node\Expr\AssignOp) {
             return false;
         }
 
