@@ -22,6 +22,7 @@ namespace PhpCodeInlinerTest\Analyzer\Visitor;
 
 use PhpCodeInliner\Analyzer\Visitor\ReturnStatementLocatorVisitor;
 use PhpParser\Node\Expr;
+use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Stmt\Const_;
 use PhpParser\Node\Stmt\Return_;
 use PHPUnit_Framework_TestCase;
@@ -49,5 +50,37 @@ final class ReturnStatementLocatorVisitorTest extends PHPUnit_Framework_TestCase
         $visitor->afterTraverse([$return2, $return1, $anExpr, $return3]);
 
         $this->assertSame([$return2, $return1, $return3], $visitor->getFoundReturnStatements());
+    }
+
+    public function testWillIgnoreReturnStatementsInClosureNodes()
+    {
+        $return1  = new Return_();
+        $return2  = new Return_();
+        $closure1 = new Closure();
+        $return3  = new Return_();
+        $closure2 = new Closure();
+        $return4  = new Return_();
+        $return5  = new Return_();
+
+        $visitor = new ReturnStatementLocatorVisitor();
+
+        $visitor->beforeTraverse([$return1, $return2, $closure1, $return3, $closure2, $return4, $return5]);
+        $visitor->enterNode($return1);
+        $visitor->enterNode($return2);
+        $visitor->enterNode($closure1);
+        $visitor->enterNode($return3);
+        $visitor->enterNode($closure2);
+        $visitor->enterNode($return4);
+        $visitor->leaveNode($return4);
+        $visitor->leaveNode($closure2);
+        $visitor->leaveNode($return3);
+        $visitor->leaveNode($closure1);
+        $visitor->enterNode($return5);
+        $visitor->leaveNode($return5);
+        $visitor->leaveNode($return2);
+        $visitor->leaveNode($return1);
+        $visitor->afterTraverse([$return1, $return2, $closure1, $return3, $closure2, $return4, $return5]);
+
+        $this->assertSame([$return1, $return2, $return5], $visitor->getFoundReturnStatements());
     }
 }
