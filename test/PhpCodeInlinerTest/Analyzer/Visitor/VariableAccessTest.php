@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace PhpCodeInlinerTest\Analyzer\Visitor;
 
 use PhpCodeInliner\Analyzer\Visitor\VariableAccess;
+use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\BinaryOp\Mul;
 use PhpParser\Node\Expr\Variable;
@@ -44,5 +45,29 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 new Mul(new Variable('foo'), new Variable('bar'))
             )
         );
+    }
+
+    public function testChecksIfAccessCanCauseSideEffects(
+        bool $mayCauseSideEffects,
+        array $variableTypes,
+        string $varName,
+        Node $operation = null
+    ) {
+        self::assertSame(
+            $mayCauseSideEffects,
+            VariableAccess::fromVariableAndOperation(new Variable($varName), $operation)
+                ->canCauseSideEffects($variableTypes)
+        );
+    }
+
+    public function sideEffectCasesProvider()
+    {
+        return [
+            'simple variable access, mixed type (implicit)' => [
+                true,
+                [],
+                'foo'
+            ],
+        ];
     }
 }
