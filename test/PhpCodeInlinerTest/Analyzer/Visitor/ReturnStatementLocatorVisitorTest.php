@@ -88,7 +88,6 @@ final class ReturnStatementLocatorVisitorTest extends PHPUnit_Framework_TestCase
         $this->assertSame([$return1, $return2, $return5], $visitor->getFoundReturnStatements());
     }
 
-
     public function testWillIgnoreReturnStatementsInSubClassNodes()
     {
         $return1 = new Return_();
