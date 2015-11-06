@@ -139,7 +139,7 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
                 return $sum($foo, $bar);
             }],
             'static method call on a  pure static function' => [function (int $foo, int $bar) {
-                return self::staticSum($foo, $bar);
+                return IsFunctionPureTest::staticSum($foo, $bar);
             }],
         ];
     }
@@ -221,6 +221,12 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             }],
             'static keyword usage' => [function () {
                 static $bar;
+            }],
+            'method call on unknown method' => [function () {
+                $this->unknownInstanceMethod();
+            }],
+            'method call on unknown static method' => [function () {
+                IsFunctionPureTest::unknownStaticMethod();
             }],
         ];
     }
