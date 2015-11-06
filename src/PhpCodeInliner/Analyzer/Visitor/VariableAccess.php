@@ -100,7 +100,14 @@ final class VariableAccess
         }
 
         if ($lastOperation instanceof Node\Expr\ArrayDimFetch && $isScalar) {
-            return false;
+            // checking parent operation, since we can't have any assumptions on any of the types
+            // of the array keys, we have to check the operations applied to that array key for side-effects
+            $parentCheck = new self(
+                new Variable(uniqid('surrogateVariableNameForTheArrayDimFetch', true)),
+                array_slice($this->parentOperations, 0, count($this->parentOperations) - 1)
+            );
+
+            return $parentCheck->canCauseSideEffects($variableTypes);
         }
 
         if (
