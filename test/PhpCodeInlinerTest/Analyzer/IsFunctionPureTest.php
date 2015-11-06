@@ -43,9 +43,16 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
      */
     public function pureFunctionsProvider() : array
     {
+        $baz = null;
+
         return [
             'empty function' => [function () {
-
+            }],
+            'empty function with parameters' => [function ($foo, $bar) {
+            }],
+            'empty function with by-ref parameters' => [function (& $foo, & $bar) {
+            }],
+            'empty function with use statement' => [function (& $foo, & $bar) use ($baz) {
             }],
         ];
     }
