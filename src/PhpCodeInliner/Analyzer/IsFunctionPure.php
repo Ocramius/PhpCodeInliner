@@ -20,12 +20,70 @@ declare(strict_types=1);
 
 namespace PhpCodeInliner\Analyzer;
 
+use PhpCodeInliner\Analyzer\Visitor\ReturnStatementLocatorVisitor;
+use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\FunctionLike;
+use PhpParser\NodeTraverser;
 
 final class IsFunctionPure
 {
     public function __invoke(FunctionLike $function) : bool
     {
+        if ($this->getByRefParameters($function) || $this->getByRefUseParameters($function)) {
+            return false;
+        }
+
         return true;
+    }
+
+    private function getReturnNodes(FunctionLike $function)
+    {
+        $traverser     = new NodeTraverser();
+        $returnLocator = new ReturnStatementLocatorVisitor();
+
+        $traverser->addVisitor(new ReturnStatementLocatorVisitor());
+        $traverser->traverse([$function]);
+
+        return $returnLocator;
+    }
+
+    /**
+     * @param FunctionLike $function
+     *
+     * @return string[]
+     */
+    private function getByRefParameters(FunctionLike $function) : array
+    {
+        $byRefParams = [];
+
+        foreach ($function->getParams() as $param) {
+            if ($param->byRef) {
+                $byRefParams[] = $param->name;
+            }
+        }
+
+        return $byRefParams;
+    }
+
+    /**
+     * @param FunctionLike $function
+     *
+     * @return string[]
+     */
+    private function getByRefUseParameters(FunctionLike $function) : array
+    {
+        if (! $function instanceof Closure) {
+            return [];
+        }
+
+        $byRefUses = [];
+
+        foreach ($function->uses as $closureUse) {
+            if ($closureUse->byRef) {
+                $byRefUses[] = $closureUse->var;
+            }
+        }
+
+        return $byRefUses;
     }
 }
