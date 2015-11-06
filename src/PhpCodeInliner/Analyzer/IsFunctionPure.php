@@ -26,5 +26,6 @@ final class IsFunctionPure
 {
     public function __invoke(FunctionLike $function) : bool
     {
+        return true;
     }
 }
