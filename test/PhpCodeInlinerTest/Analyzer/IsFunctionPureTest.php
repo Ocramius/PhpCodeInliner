@@ -80,6 +80,27 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'function with string cast of string type' => [function (string $foo) {
                 return (string) $foo;
             }],
+            'function with int cast of int type' => [function (int $foo) {
+                return (int) $foo;
+            }],
+            'function with int cast of unknown type' => [function ($foo) {
+                return (int) $foo;
+            }],
+            'function with int cast of object type' => [function ($foo) {
+                return (int) $foo;
+            }],
+            'function with array cast of unknown type' => [function ($foo) {
+                return (array) $foo;
+            }],
+            'function with array cast of object type' => [function (\stdClass $foo) {
+                return (array) $foo;
+            }],
+            'function with concatenation of string type' => [function (string $foo) {
+                return $foo . 'bar';
+            }],
+            'function with concatenation of int type' => [function (int $foo) {
+                return $foo . 'bar';
+            }],
         ];
     }
 
@@ -108,6 +129,12 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             }],
             'function with string cast of object type' => [function (\stdClass $foo) {
                 return (string) $foo;
+            }],
+            'function with concatenation of unknown type' => [function ($foo) {
+                return $foo . 'bar';
+            }],
+            'function with concatenation of object type' => [function (\stdClass $foo) {
+                return $foo . 'bar';
             }],
         ];
     }
