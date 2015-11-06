@@ -71,6 +71,10 @@ final class VariableAccess
             return false;
         }
 
+        if ($this->operation instanceof Node\Expr\ArrayDimFetch && $this->isScalarType($variableTypes)) {
+            return false;
+        }
+
         return true;
     }
 
