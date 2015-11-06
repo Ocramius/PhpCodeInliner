@@ -88,7 +88,10 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
         $baz = null;
 
         return [
-            'function with return value being a by-ref use statement value' => [function () use (& $baz) {
+            'function with return value being a by-ref use statement parameter' => [function () use (& $baz) {
+                return $baz;
+            }],
+            'function with by-ref return value being a by-ref parameter' => [function & (& $baz) {
                 return $baz;
             }],
         ];
