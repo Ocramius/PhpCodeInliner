@@ -132,6 +132,13 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
 
                 return $sum($foo, $bar);
             }],
+            'method call with nested pure function calls' => [function (int $foo, int $bar) {
+                $sum = function (int $a, int $b) : int {
+                    return $this->sum($a, $b);
+                };
+
+                return $sum($foo, $bar);
+            }],
         ];
     }
 
