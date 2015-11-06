@@ -122,6 +122,9 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'assignment of int type' => [function (int $foo) {
                 $bar = $foo;
             }],
+            'method call on a pure function' => [function (int $foo, int $bar) {
+                return $this->sum($foo, $bar);
+            }],
         ];
     }
 
@@ -232,5 +235,13 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
         );
 
         return $locator->closureNode;
+    }
+
+    /**
+     * Dummy method: used just as a pure function stub
+     */
+    private function sum(int $a, int $b) : int
+    {
+        return $a + $b;
     }
 }
