@@ -67,7 +67,8 @@ final class FunctionScopeIsolatingVisitorTest extends PHPUnit_Framework_TestCase
 
         $this->visitor->beforeTraverse([]);
 
-        $node = new Node\Scalar\String_('foo');
+        /* @var $node Node */
+        $node = $this->getMock(Node::class);
 
         $this->wrappedVisitor->expects($this->once())->method('enterNode')->with($node);
         $this->visitor->enterNode($node);
