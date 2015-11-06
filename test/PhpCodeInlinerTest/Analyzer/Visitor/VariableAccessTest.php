@@ -67,24 +67,30 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
     {
         return [
             'simple variable access, mixed type (implicit)' => [
-                true,
+                false,
                 [],
-                'foo'
+                'foo',
             ],
             'simple variable access, mixed type (explicit)' => [
-                true,
+                false,
                 ['foo' => null],
-                'foo'
+                'foo',
             ],
             'simple variable access, int type (explicit)' => [
-                true,
+                false,
                 ['foo' => 'int'],
-                'foo'
+                'foo',
             ],
             'simple variable access, object type (explicit)' => [
+                false,
+                ['foo' => 'stdClass'],
+                'foo',
+            ],
+            'string cast expression, object type (explicit)' => [
                 true,
                 ['foo' => 'stdClass'],
-                'foo'
+                'foo',
+                new Expr\Cast\String_(new Variable('foo')),
             ],
         ];
     }
