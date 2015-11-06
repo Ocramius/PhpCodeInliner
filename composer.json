@@ -21,10 +21,7 @@
         "php": "~7.0"
     },
     "require-dev": {
-          "ext-phar":                    "*",
-          "phpunit/phpunit":             "~4.0",
-          "squizlabs/php_codesniffer":   "~2.0",
-          "couscous/couscous":           "dev-master@DEV"
+          "phpunit/phpunit": "~5.0"
     },
     "autoload": {
         "psr-0": {
