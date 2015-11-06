@@ -31,6 +31,9 @@ use PhpParser\NodeVisitor;
  */
 final class FunctionReferenceLocatorVisitor implements NodeVisitor
 {
+    /**
+     * @var FunctionCall[]
+     */
     private $functionCalls = [];
 
     /**
@@ -47,15 +50,15 @@ final class FunctionReferenceLocatorVisitor implements NodeVisitor
     public function enterNode(Node $node)
     {
         if ($node instanceof Node\Expr\FuncCall) {
-            $this->functionCalls = FunctionCall::fromFunctionCall($node);
+            $this->functionCalls[] = FunctionCall::fromFunctionCall($node);
         }
 
         if ($node instanceof Node\Expr\MethodCall) {
-            $this->functionCalls = FunctionCall::fromInstanceCall($node);
+            $this->functionCalls[] = FunctionCall::fromInstanceCall($node);
         }
 
         if ($node instanceof Node\Expr\StaticCall) {
-            $this->functionCalls = FunctionCall::fromStaticCall($node);
+            $this->functionCalls[] = FunctionCall::fromStaticCall($node);
         }
     }
 
@@ -71,5 +74,13 @@ final class FunctionReferenceLocatorVisitor implements NodeVisitor
      */
     public function afterTraverse(array $nodes)
     {
+    }
+
+    /**
+     * @return FunctionCall[]
+     */
+    public function getCollectedFunctionCalls() : array
+    {
+        return $this->functionCalls;
     }
 }
