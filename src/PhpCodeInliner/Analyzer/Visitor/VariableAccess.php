@@ -56,9 +56,9 @@ final class VariableAccess
         $this->parentOperations = $parentOperations;
     }
 
-    public static function fromVariableAndOperation(Variable $variable, Node $operation = null) : self
+    public static function fromVariableAndOperation(Variable $variable, Node ...$operations) : self
     {
-        return new self($variable, array_filter([$operation]));
+        return new self($variable, $operations);
     }
 
     public static function fromStaticVariableAndOperations(StaticVar $staticVar, Node ...$operations) : self
