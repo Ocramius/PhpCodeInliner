@@ -113,6 +113,9 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'function with multiplication of object type' => [function (\stdClass $foo) {
                 return $foo * 2;
             }],
+            'array access on array type' => [function (array $foo) {
+                return $foo['bar'];
+            }],
         ];
     }
 
@@ -147,6 +150,12 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             }],
             'function with concatenation of object type' => [function (\stdClass $foo) {
                 return $foo . 'bar';
+            }],
+            'array access on unknown type' => [function ($foo) {
+                return $foo['bar'];
+            }],
+            'array access on object type' => [function (\stdClass $foo) {
+                return $foo['bar'];
             }],
         ];
     }
