@@ -20,9 +20,11 @@ declare(strict_types=1);
 
 namespace PhpCodeInliner\Analyzer;
 
-use PhpCodeInliner\Analyzer\Visitor\ReturnStatementLocatorVisitor;
+use PhpCodeInliner\Analyzer\Visitor\VariableAccess;
+use PhpCodeInliner\Analyzer\Visitor\VariableAccessLocatorVisitor;
 use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\FunctionLike;
+use PhpParser\Node\Name;
 use PhpParser\NodeTraverser;
 
 final class IsFunctionPure
@@ -33,18 +35,54 @@ final class IsFunctionPure
             return false;
         }
 
+        if ($this->hasVariableAccessesWithSideEffects($function)) {
+            return false;
+        }
+
         return true;
     }
 
-    private function getReturnNodes(FunctionLike $function)
+    private function hasVariableAccessesWithSideEffects(FunctionLike $function) : bool
+    {
+        $variableTypes = $this->getVariableTypes($function);
+
+        return (bool) array_filter(
+            $this->getVariableAccesses($function),
+            function (VariableAccess $variableAccess) use ($variableTypes) {
+                return $variableAccess->canCauseSideEffects($variableTypes);
+            }
+        );
+    }
+
+    private function getVariableTypes(FunctionLike $function) : array
+    {
+        $variableTypes = [];
+
+        foreach ($function->getParams() as $param) {
+            // note: this is sufficient, atm, as we just need to separate scalar types from other types
+            if ($param->variadic) {
+                $variableTypes[$param->name] = 'array';
+
+                continue;
+            }
+
+            $type = $param->type;
+
+            $variableTypes[$param->name] = $type instanceof Name ? $type->toString() : $type;
+        }
+
+        return $variableTypes;
+    }
+
+    private function getVariableAccesses(FunctionLike $function) : array
     {
         $traverser     = new NodeTraverser();
-        $returnLocator = new ReturnStatementLocatorVisitor();
+        $accessLocator = new VariableAccessLocatorVisitor();
 
-        $traverser->addVisitor(new ReturnStatementLocatorVisitor());
-        $traverser->traverse([$function]);
+        $traverser->addVisitor($accessLocator);
+        $traverser->traverse([$function->getStmts()]);
 
-        return $returnLocator;
+        return $accessLocator->getFoundVariableAccesses();
     }
 
     /**
