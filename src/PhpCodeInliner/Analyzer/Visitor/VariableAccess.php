@@ -40,20 +40,20 @@ final class VariableAccess
     private $variable;
 
     /**
-     * @var Node|null
+     * @var Node[]
      */
-    private $operation;
+    private $parentOperations;
 
     /**
      * VariableAccess constructor.
      *
      * @param Variable|StaticVar $variable
-     * @param Node|null          $operation
+     * @param Node[]             $parentOperations
      */
-    private function __construct($variable, Node $operation = null)
+    private function __construct($variable, array $parentOperations)
     {
-        $this->variable  = $variable;
-        $this->operation = $operation;
+        $this->variable         = $variable;
+        $this->parentOperations = $parentOperations;
     }
 
     /**
@@ -77,7 +77,12 @@ final class VariableAccess
             ));
         }
 
-        return new self($variable, $operation);
+        return new self($variable, array_filter([$operation]));
+    }
+
+    public static function fromStaticVariableAndOperations(StaticVar $staticVar, Node ...$operations) : self
+    {
+        return new self($staticVar, $operations);
     }
 
     /**
@@ -91,47 +96,49 @@ final class VariableAccess
             return true;
         }
 
+        $lastOperation = $this->getLastOperation();
+
         // @todo any of the following operations on array sub-keys is also to be banished, so we need to consider
         //       any operation on any array key as on "mixed" and re-run this check.
-        if (null === $this->operation) {
+        if (null === $lastOperation) {
             return false;
         }
 
         $isScalar = $this->isScalarType($variableTypes);
 
-        if ($this->operation instanceof Node\Expr\Cast\String_ && ! $isScalar) {
+        if ($lastOperation instanceof Node\Expr\Cast\String_ && ! $isScalar) {
             return true;
         }
 
-        if ($this->operation instanceof Node\Expr\Cast) {
+        if ($lastOperation instanceof Node\Expr\Cast) {
             return false;
         }
 
-        if ($this->operation instanceof Node\Expr\Cast\String_ && $isScalar) {
+        if ($lastOperation instanceof Node\Expr\Cast\String_ && $isScalar) {
             return false;
         }
 
-        if ($this->operation instanceof Node\Expr\ArrayDimFetch && $isScalar) {
+        if ($lastOperation instanceof Node\Expr\ArrayDimFetch && $isScalar) {
             return false;
         }
 
         if (
             (
-                $this->operation instanceof Node\Expr\BinaryOp\Concat
-                || $this->operation instanceof Node\Expr\AssignOp\Concat
+                $lastOperation instanceof Node\Expr\BinaryOp\Concat
+                || $lastOperation instanceof Node\Expr\AssignOp\Concat
             )
             && ! $isScalar) {
             return true;
         }
 
         if (
-            $this->operation instanceof Node\Expr\BinaryOp
-            || $this->operation instanceof Node\Expr\AssignOp
+            $lastOperation instanceof Node\Expr\BinaryOp
+            || $lastOperation instanceof Node\Expr\AssignOp
         ) {
             return false;
         }
 
-        return ! ($this->operation instanceof Return_ || $this->operation instanceof Node\Expr\Assign);
+        return ! ($lastOperation instanceof Return_ || $lastOperation instanceof Node\Expr\Assign);
     }
 
     private function isScalarType(array $variableTypes) : bool
@@ -141,5 +148,13 @@ final class VariableAccess
         }
 
         return in_array(strtolower($variableTypes[$this->variable->name]), self::SCALAR_TYPES, true);
+    }
+
+    /**
+     * @return Node|null
+     */
+    private function getLastOperation()
+    {
+        return end($this->parentOperations) ?: null;
     }
 }
