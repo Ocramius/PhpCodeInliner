@@ -31,4 +31,22 @@ use PhpParser\Node\Stmt\StaticVar;
  */
 final class FunctionCall
 {
+    private function __construct()
+    {
+    }
+
+    public static function fromStaticCall(Node\Expr\StaticCall $staticCall) : self
+    {
+        return new self();
+    }
+
+    public static function fromInstanceCall(Node\Expr\MethodCall $staticCall) : self
+    {
+        return new self();
+    }
+
+    public static function fromFunctionCall(Node\Expr\FuncCall $staticCall) : self
+    {
+        return new self();
+    }
 }
