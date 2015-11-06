@@ -31,14 +31,14 @@ use PhpParser\NodeVisitor;
  */
 final class FunctionReferenceLocatorVisitor implements NodeVisitor
 {
-    private $functionReferences = [];
+    private $functionCalls = [];
 
     /**
      * {@inheritDoc}
      */
     public function beforeTraverse(array $nodes)
     {
-        $this->functionReferences = [];
+        $this->functionCalls = [];
     }
 
     /**
@@ -47,15 +47,15 @@ final class FunctionReferenceLocatorVisitor implements NodeVisitor
     public function enterNode(Node $node)
     {
         if ($node instanceof Node\Expr\FuncCall) {
-            $this->functionReferences = FunctionCall::fromFunctionCall($node);
+            $this->functionCalls = FunctionCall::fromFunctionCall($node);
         }
 
         if ($node instanceof Node\Expr\MethodCall) {
-            $this->functionReferences = FunctionCall::fromInstanceCall($node);
+            $this->functionCalls = FunctionCall::fromInstanceCall($node);
         }
 
         if ($node instanceof Node\Expr\StaticCall) {
-            $this->functionReferences = FunctionCall::fromStaticCall($node);
+            $this->functionCalls = FunctionCall::fromStaticCall($node);
         }
     }
 
