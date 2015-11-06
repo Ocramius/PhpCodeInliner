@@ -125,6 +125,13 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'method call on a pure function' => [function (int $foo, int $bar) {
                 return $this->sum($foo, $bar);
             }],
+            'method call on a pure inline-defined function' => [function (int $foo, int $bar) {
+                $sum = function (int $a, int $b) : int {
+                    return $a + $b;
+                };
+
+                return $sum($foo, $bar);
+            }],
         ];
     }
 
