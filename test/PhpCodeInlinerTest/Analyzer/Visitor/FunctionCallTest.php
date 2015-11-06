@@ -53,4 +53,46 @@ final class FunctionCallTest extends PHPUnit_Framework_TestCase
             FunctionCall::fromInstanceCall(new Expr\MethodCall(new Expr\Variable('foo'), 'bar'))
         );
     }
+
+    /**
+     * @dataProvider resolvedCallsDataProvider
+     */
+    public function testWillEvaluateFunctionRelativeName(Expr $node, array $variableValues, array $expectedType)
+    {
+        $functionCall = null;
+
+        if ($node instanceof Expr\FuncCall) {
+            $functionCall = FunctionCall::fromFunctionCall($node);
+        }
+
+        if ($node instanceof Expr\StaticCall) {
+            $functionCall = FunctionCall::fromStaticCall($node);
+        }
+
+        if ($node instanceof Expr\MethodCall) {
+            $functionCall = FunctionCall::fromInstanceCall($node);
+        }
+
+        if (! $functionCall) {
+            throw new \InvalidArgumentException(sprintf('Unrecognized node of type "%s"', get_class($node)));
+        }
+
+        $this->assertSame($expectedType, $functionCall->resolveFunctionName($variableValues));
+    }
+
+    public function resolvedCallsDataProvider()
+    {
+        return [
+            'static call with string class name' => [
+                new Expr\StaticCall(new Node\Name('Foo'), 'bar'),
+                [],
+                ['Foo', 'bar'],
+            ],
+            'static call with static class name' => [
+                new Expr\StaticCall(new Node\Name('Foo'), new Node\Name('bar')),
+                [],
+                ['Foo', 'bar'],
+            ],
+        ];
+    }
 }
