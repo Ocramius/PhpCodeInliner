@@ -26,6 +26,11 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\NodeVisitorAbstract;
 
+/**
+ * Visitor responsible for locating any usage of the `return` statement inside of a portion of code
+ *
+ * Supposed to be used with a {@see \PhpParser\NodeTraverserInterface} instance
+ */
 final class ReturnStatementLocatorVisitor extends NodeVisitorAbstract
 {
     /**
