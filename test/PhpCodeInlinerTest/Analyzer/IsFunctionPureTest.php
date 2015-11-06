@@ -157,6 +157,14 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'array access on object type' => [function (\stdClass $foo) {
                 $foo['bar'];
             }],
+            // note: this is a limitation due to being unable to track assignment types (for now):
+            'assignment of object type' => [function (\stdClass $foo) {
+                $bar = $foo;
+            }],
+            // note: this is a limitation due to being unable to track assignment types (for now):
+            'assignment of unknown type' => [function ($foo) {
+                $bar = $foo;
+            }],
         ];
     }
 
