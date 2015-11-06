@@ -302,6 +302,12 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 'GLOBALS',
                 new Expr\Assign(new Variable('GLOBALS'), new Variable('foo')),
             ],
+            'global variable definition via `global` keyword' => [
+                true,
+                [],
+                'foo',
+                new Node\Stmt\Global_([new Variable('foo')]),
+            ],
         ];
     }
 }
