@@ -37,7 +37,7 @@ final class VariableAccess
     const SCALAR_TYPES = ['array', 'int', 'float', 'string', 'bool'];
 
     /**
-     * @var Variable
+     * @var Variable|Node\Stmt\StaticVar
      */
     private $variable;
 
@@ -46,7 +46,13 @@ final class VariableAccess
      */
     private $operation;
 
-    private function __construct(Variable $variable, Node $operation = null)
+    /**
+     * VariableAccess constructor.
+     *
+     * @param Variable|Node\Stmt\StaticVar $variable
+     * @param Node|null                    $operation
+     */
+    private function __construct($variable, Node $operation = null)
     {
         $this->variable  = $variable;
         $this->operation = $operation;
