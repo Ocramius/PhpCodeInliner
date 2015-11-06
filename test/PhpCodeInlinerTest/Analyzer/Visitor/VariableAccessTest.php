@@ -308,6 +308,12 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 'foo',
                 new Node\Stmt\Global_([new Variable('foo')]),
             ],
+            'static variable definition via `static` keyword' => [
+                true,
+                [],
+                'foo',
+                new Node\Stmt\Static_([new Node\Stmt\StaticVar('foo')]),
+            ],
         ];
     }
 }
