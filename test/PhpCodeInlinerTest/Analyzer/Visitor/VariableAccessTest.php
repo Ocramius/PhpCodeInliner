@@ -218,6 +218,24 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 'foo',
                 new Expr\AssignOp\Concat(new Variable('foo'), new Variable('bar')),
             ],
+            'multiply self, scalar type (explicit)' => [
+                false,
+                ['foo' => 'int'],
+                'foo',
+                new Expr\AssignOp\Mul(new Variable('foo'), new Variable('bar')),
+            ],
+            'multiply self, object type (explicit)' => [
+                false,
+                ['foo' => 'stdClass'],
+                'foo',
+                new Expr\AssignOp\Mul(new Variable('foo'), new Variable('bar')),
+            ],
+            'multiply self, mixed type (implicit)' => [
+                false,
+                [],
+                'foo',
+                new Expr\AssignOp\Mul(new Variable('foo'), new Variable('bar')),
+            ],
         ];
     }
 }
