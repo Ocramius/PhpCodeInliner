@@ -28,7 +28,7 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
 {
     public function testEmptyFunctionIsPure()
     {
-        self::assertFalse($this->isFunctionPure()->__invoke(new Function_('foo')));
+        self::assertTrue($this->isFunctionPure()->__invoke(new Function_('foo')));
     }
 
     private function isFunctionPure() : IsFunctionPure
