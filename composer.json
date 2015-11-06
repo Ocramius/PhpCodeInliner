@@ -18,7 +18,8 @@
         }
     ],
     "require": {
-        "php": "~7.0"
+        "php":              "~7.0",
+        "nikic/php-parser": "^2.0.0@BETA"
     },
     "require-dev": {
           "phpunit/phpunit": "~5.0"
