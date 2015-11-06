@@ -200,6 +200,24 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 'foo',
                 new Expr\BinaryOp\Concat(new Variable('foo'), new Variable('bar')),
             ],
+            'multiplication, scalar type (explicit)' => [
+                false,
+                ['foo' => 'int'],
+                'foo',
+                new Expr\BinaryOp\Mul(new Variable('foo'), new Variable('bar')),
+            ],
+            'multiplication, object type (explicit)' => [
+                true,
+                ['foo' => 'stdClass'],
+                'foo',
+                new Expr\BinaryOp\Mul(new Variable('foo'), new Variable('bar')),
+            ],
+            'multiplication, mixed type (implicit)' => [
+                true,
+                [],
+                'foo',
+                new Expr\BinaryOp\Mul(new Variable('foo'), new Variable('bar')),
+            ],
             'string append, scalar type (explicit)' => [
                 false,
                 ['foo' => 'int'],
