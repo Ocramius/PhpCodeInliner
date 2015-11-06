@@ -55,7 +55,7 @@ final class VariableAccessLocatorVisitor extends NodeVisitorAbstract
      */
     public function enterNode(Node $node)
     {
-        if ($node instanceof Variable) {
+        if ($node instanceof Variable || $node instanceof Node\Stmt\StaticVar) {
             $this->foundVariableAccesses[] = VariableAccess::fromVariableAndOperation(
                 $node,
                 end($this->lastVisitedNodes) ?: null
