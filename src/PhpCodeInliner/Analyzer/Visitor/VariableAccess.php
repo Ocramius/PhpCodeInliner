@@ -66,6 +66,8 @@ final class VariableAccess
      * @return self
      *
      * @throws \InvalidArgumentException
+     *
+     * @todo split into separate named constructors later on
      */
     public static function fromVariableAndOperation($variable, Node $operation = null)
     {
