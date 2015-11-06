@@ -27,6 +27,9 @@ use PhpParser\Node\Stmt\Const_;
 use PhpParser\Node\Stmt\Return_;
 use PHPUnit_Framework_TestCase;
 
+/**
+ * @covers \PhpCodeInliner\Analyzer\Visitor\ReturnStatementLocatorVisitor
+ */
 final class ReturnStatementLocatorVisitorTest extends PHPUnit_Framework_TestCase
 {
     public function testWillRetrieveReturnStatements()
