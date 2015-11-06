@@ -33,6 +33,8 @@ use PhpParser\NodeVisitorAbstract;
  */
 final class VariableAccess
 {
+    const SCALAR_TYPES = ['int', 'float', 'string', 'bool'];
+
     /**
      * @var Variable
      */
@@ -78,6 +80,6 @@ final class VariableAccess
             return false;
         }
 
-        return in_array(strtolower($variableTypes[$this->variable->name]), ['int', 'float', 'string', 'bool'], true);
+        return in_array(strtolower($variableTypes[$this->variable->name]), self::SCALAR_TYPES, true);
     }
 }
