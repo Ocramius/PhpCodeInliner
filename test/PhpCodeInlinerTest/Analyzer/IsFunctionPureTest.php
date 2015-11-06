@@ -21,18 +21,63 @@ declare(strict_types=1);
 namespace PhpCodeInlinerTest\Analyzer;
 
 use PhpCodeInliner\Analyzer\IsFunctionPure;
-use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\FunctionLike;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\ParserFactory;
 use PHPUnit_Framework_TestCase;
+use SuperClosure\Analyzer\Visitor\ClosureLocatorVisitor;
 
 final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
 {
-    public function testEmptyFunctionIsPure()
+    /**
+     * @dataProvider pureFunctionsProvider
+     */
+    public function testPureFunction(callable $function)
     {
-        self::assertTrue($this->isFunctionPure()->__invoke(new Function_('foo')));
+        self::assertTrue($this->buildFunctionPure()->__invoke($this->getFunctionAst($function)));
     }
 
-    private function isFunctionPure() : IsFunctionPure
+    /**
+     * Data provider
+     */
+    public function pureFunctionsProvider() : array
+    {
+        return [
+            'empty function' => [function () {
+
+            }],
+        ];
+    }
+
+    private function buildFunctionPure() : IsFunctionPure
     {
         return new IsFunctionPure();
+    }
+
+    private function getFunctionAst(callable $function) : FunctionLike
+    {
+        $reflection = new \ReflectionFunction($function);
+
+        if (! $sourceFile = $reflection->getFileName()) {
+            throw new \UnexpectedValueException(sprintf(
+                'Reflection function "%s" source file not found',
+                $reflection->getName()
+            ));
+        }
+
+        $locator   = new ClosureLocatorVisitor($reflection);
+        $traverser = new NodeTraverser();
+
+        $traverser->addVisitor(new NameResolver());
+        $traverser->addVisitor($locator);
+
+        $traverser->traverse(
+            (new ParserFactory())
+                ->create(ParserFactory::ONLY_PHP7)
+                ->parse(file_get_contents($sourceFile))
+        );
+
+        return $locator->closureNode;
     }
 }
