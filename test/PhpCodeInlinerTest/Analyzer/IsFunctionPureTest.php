@@ -213,6 +213,9 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'access to $_GLOBAL' => [function (\stdClass $foo) {
                 $GLOBALS;
             }],
+            'global keyword usage' => [function (\stdClass $foo) {
+                global $bar;
+            }],
         ];
     }
 
