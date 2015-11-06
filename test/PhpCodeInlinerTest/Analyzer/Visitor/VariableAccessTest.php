@@ -71,6 +71,21 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 [],
                 'foo'
             ],
+            'simple variable access, mixed type (explicit)' => [
+                true,
+                ['foo' => null],
+                'foo'
+            ],
+            'simple variable access, int type (explicit)' => [
+                true,
+                ['foo' => 'int'],
+                'foo'
+            ],
+            'simple variable access, object type (explicit)' => [
+                true,
+                ['foo' => 'stdClass'],
+                'foo'
+            ],
         ];
     }
 }
