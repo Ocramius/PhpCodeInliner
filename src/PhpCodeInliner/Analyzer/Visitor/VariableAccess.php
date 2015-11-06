@@ -56,27 +56,8 @@ final class VariableAccess
         $this->parentOperations = $parentOperations;
     }
 
-    /**
-     * @param Variable|StaticVar $variable
-     * @param Node|null          $operation
-     *
-     * @return self
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @todo split into separate named constructors later on
-     */
     public static function fromVariableAndOperation(Variable $variable, Node $operation = null) : self
     {
-        if (! ($variable instanceof Variable || $variable instanceof StaticVar)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Provided $variable must be one of %s or %s, %s given',
-                Variable::class,
-                StaticVar::class,
-                is_object($variable) ? get_class($variable) : gettype($variable)
-            ));
-        }
-
         return new self($variable, array_filter([$operation]));
     }
 
