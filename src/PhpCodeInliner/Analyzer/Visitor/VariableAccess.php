@@ -93,7 +93,7 @@ final class VariableAccess
             return false;
         }
 
-        return true;
+        return ! $this->operation instanceof Return_;
     }
 
     private function isScalarType(array $variableTypes) : bool
