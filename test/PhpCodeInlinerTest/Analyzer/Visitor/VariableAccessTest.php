@@ -296,6 +296,12 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 'foo',
                 new Expr\Assign(new Variable('foo'), new Variable('foo')),
             ],
+            'global variable usage' => [
+                true,
+                [],
+                'GLOBALS',
+                new Expr\Assign(new Variable('GLOBALS'), new Variable('foo')),
+            ],
         ];
     }
 }
