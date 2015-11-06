@@ -138,6 +138,9 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
 
                 return $sum($foo, $bar);
             }],
+            'static method call on a  pure static function' => [function (int $foo, int $bar) {
+                return self::staticSum($foo, $bar);
+            }],
         ];
     }
 
@@ -257,6 +260,14 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
      * Dummy method: used just as a pure function stub
      */
     private function sum(int $a, int $b) : int
+    {
+        return $a + $b;
+    }
+
+    /**
+     * Dummy method: used just as a pure function stub
+     */
+    private static function staticSum(int $a, int $b) : int
     {
         return $a + $b;
     }
