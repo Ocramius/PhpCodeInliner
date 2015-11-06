@@ -39,6 +39,14 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider nonPureFunctionsProvider
+     */
+    public function testNonPureFunction(callable $function)
+    {
+        self::assertFalse($this->buildFunctionPure()->__invoke($this->getFunctionAst($function)));
+    }
+
+    /**
      * Data provider
      */
     public function pureFunctionsProvider() : array
@@ -67,6 +75,20 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
                 return $a + $b;
             }],
             'function with return value being an use statement value' => [function () use ($baz) {
+                return $baz;
+            }],
+        ];
+    }
+
+    /**
+     * Data provider
+     */
+    public function nonPureFunctionsProvider() : array
+    {
+        $baz = null;
+
+        return [
+            'function with return value being a by-ref use statement value' => [function () use (& $baz) {
                 return $baz;
             }],
         ];
