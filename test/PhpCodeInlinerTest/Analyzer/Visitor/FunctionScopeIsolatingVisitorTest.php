@@ -74,7 +74,7 @@ final class FunctionScopeIsolatingVisitorTest extends PHPUnit_Framework_TestCase
         $this->visitor->enterNode($node);
     }
 
-    public function testEnterNodeDispatchesWrappedVisitorBeforeTraverse()
+    public function testEnterNodeDispatchesWrappedVisitorEnterNode()
     {
         /* @var $nodeIn Node */
         $nodeIn  = $this->getMock(Node::class);
@@ -83,5 +83,16 @@ final class FunctionScopeIsolatingVisitorTest extends PHPUnit_Framework_TestCase
         $this->wrappedVisitor->expects(self::once())->method('enterNode')->with($nodeIn)->willReturn($nodeOut);
 
         self::assertSame($nodeOut, $this->visitor->enterNode($nodeIn));
+    }
+
+    public function testLeaveNodeDispatchesWrappedVisitorLeaveNode()
+    {
+        /* @var $nodeIn Node */
+        $nodeIn  = $this->getMock(Node::class);
+        $nodeOut = $this->getMock(Node::class);
+
+        $this->wrappedVisitor->expects(self::once())->method('leaveNode')->with($nodeIn)->willReturn($nodeOut);
+
+        self::assertSame($nodeOut, $this->visitor->leaveNode($nodeIn));
     }
 }
