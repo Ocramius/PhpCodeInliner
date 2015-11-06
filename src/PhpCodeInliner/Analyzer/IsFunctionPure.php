@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace PhpCodeInliner\Analyzer;
 
+use PhpCodeInliner\Analyzer\Visitor\FunctionScopeIsolatingVisitor;
 use PhpCodeInliner\Analyzer\Visitor\VariableAccess;
 use PhpCodeInliner\Analyzer\Visitor\VariableAccessLocatorVisitor;
 use PhpParser\Node\Expr\Closure;
@@ -79,7 +80,7 @@ final class IsFunctionPure
         $traverser     = new NodeTraverser();
         $accessLocator = new VariableAccessLocatorVisitor();
 
-        $traverser->addVisitor($accessLocator);
+        $traverser->addVisitor(new FunctionScopeIsolatingVisitor($accessLocator));
         $traverser->traverse([$function->getStmts()]);
 
         return $accessLocator->getFoundVariableAccesses();

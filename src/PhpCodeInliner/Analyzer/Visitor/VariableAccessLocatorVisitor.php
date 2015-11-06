@@ -33,11 +33,6 @@ use PhpParser\NodeVisitorAbstract;
 final class VariableAccessLocatorVisitor extends NodeVisitorAbstract
 {
     /**
-     * @var Class_|Closure
-     */
-    private $currentAnonymousConstruct;
-
-    /**
      * @var Node[]
      */
     private $lastVisitedNodes = [];
@@ -52,7 +47,6 @@ final class VariableAccessLocatorVisitor extends NodeVisitorAbstract
      */
     public function beforeTraverse(array $nodes)
     {
-        $this->currentAnonymousConstruct = null;
         $this->foundVariableAccesses     = [];
     }
 
@@ -61,17 +55,6 @@ final class VariableAccessLocatorVisitor extends NodeVisitorAbstract
      */
     public function enterNode(Node $node)
     {
-        if ($this->currentAnonymousConstruct) {
-            // skip any analysis on nodes that are children of anonymous classes or functions
-            return;
-        }
-
-        if ($node instanceof Closure || $node instanceof Class_) {
-            $this->currentAnonymousConstruct = $node;
-
-            return;
-        }
-
         if ($node instanceof Variable) {
             $this->foundVariableAccesses[] = VariableAccess::fromVariableAndOperation(
                 $node,
@@ -87,13 +70,7 @@ final class VariableAccessLocatorVisitor extends NodeVisitorAbstract
      */
     public function leaveNode(Node $node)
     {
-        if ($node === $this->currentAnonymousConstruct) {
-            $this->currentAnonymousConstruct = null;
-        }
-
-        if (! $this->currentAnonymousConstruct) {
-            array_pop($this->lastVisitedNodes);
-        }
+        array_pop($this->lastVisitedNodes);
     }
 
     /**
