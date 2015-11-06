@@ -58,7 +58,7 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             }],
             'empty function with parameters' => [function (int $foo, int $bar) {
             }],
-            'empty function with use statement' => [function (int & $foo, int & $bar) use ($baz) {
+            'empty function with use statement' => [function (int $foo, int $bar) use ($baz) {
             }],
             'function with constant return value' => [function () {
                 return 'baz';
