@@ -69,11 +69,21 @@ final class VariableAccess
             return false;
         }
 
-        if ($this->operation instanceof Node\Expr\Cast\String_ && $this->isScalarType($variableTypes)) {
+        $isScalar = $this->isScalarType($variableTypes);
+
+        if ($this->operation instanceof Node\Expr\Cast\String_ && ! $isScalar) {
+            return true;
+        }
+
+        if ($this->operation instanceof Node\Expr\Cast) {
             return false;
         }
 
-        if ($this->operation instanceof Node\Expr\ArrayDimFetch && $this->isScalarType($variableTypes)) {
+        if ($this->operation instanceof Node\Expr\Cast\String_ && $isScalar) {
+            return false;
+        }
+
+        if ($this->operation instanceof Node\Expr\ArrayDimFetch && $isScalar) {
             return false;
         }
 
@@ -82,7 +92,7 @@ final class VariableAccess
                 $this->operation instanceof Node\Expr\BinaryOp\Concat
                 || $this->operation instanceof Node\Expr\AssignOp\Concat
             )
-            && ! $this->isScalarType($variableTypes)) {
+            && ! $isScalar) {
             return true;
         }
 
