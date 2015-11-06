@@ -20,11 +20,10 @@ declare(strict_types=1);
 
 namespace PhpCodeInlinerTest\Analyzer\Visitor;
 
-use PhpCodeInliner\Analyzer\Visitor\VariableAccess;
+use PhpCodeInliner\Analyzer\Visitor\FunctionScopeIsolatingVisitor;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
-use PhpParser\Node\Expr\BinaryOp\Mul;
-use PhpParser\Node\Expr\Variable;
+use PhpParser\NodeVisitor;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -32,6 +31,35 @@ use PHPUnit_Framework_TestCase;
  */
 final class FunctionScopeIsolatingVisitorTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var FunctionScopeIsolatingVisitor
+     */
+    private $visitor;
+
+    /**
+     * @var NodeVisitor|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $wrappedVisitor;
+
+    /**
+     * {@inhertDoc}
+     */
+    protected function setUp()
+    {
+        $this->wrappedVisitor = $this->getMock(NodeVisitor::class);
+        $this->visitor        = new FunctionScopeIsolatingVisitor($this->wrappedVisitor);
+    }
+
+    public function testBeforeTraverseIsInvokingWrappedVisitor()
+    {
+        $nodesIn  = [$this->getMock(Node::class)];
+        $nodesOut = [$this->getMock(Node::class)];
+
+        $this->wrappedVisitor->expects(self::once())->method('beforeTraverse')->with($nodesIn)->willReturn($nodesOut);
+
+        self::assertSame($nodesOut, $this->visitor->beforeTraverse($nodesIn));
+    }
+
     public function testBeforeTraverseIsResettingTheCurrentSubScopeFilter()
     {
         self::markTestIncomplete();
