@@ -66,7 +66,7 @@ final class VariableAccess
      *
      * @todo split into separate named constructors later on
      */
-    public static function fromVariableAndOperation($variable, Node $operation = null)
+    public static function fromVariableAndOperation($variable, Node $operation = null) : self
     {
         if (! ($variable instanceof Variable || $variable instanceof StaticVar)) {
             throw new \InvalidArgumentException(sprintf(
