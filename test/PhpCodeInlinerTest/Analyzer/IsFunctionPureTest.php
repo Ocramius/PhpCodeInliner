@@ -56,11 +56,11 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
         return [
             'empty function' => [function () {
             }],
-            'empty function with parameters' => [function ($foo, $bar) {
+            'empty function with parameters' => [function (int $foo, int $bar) {
             }],
-            'empty function with by-ref parameters' => [function (& $foo, & $bar) {
+            'empty function with by-ref parameters' => [function (int & $foo, int & $bar) {
             }],
-            'empty function with use statement' => [function (& $foo, & $bar) use ($baz) {
+            'empty function with use statement' => [function (int & $foo, int & $bar) use ($baz) {
             }],
             'function with constant return value' => [function () {
                 return 'baz';
@@ -139,7 +139,7 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'function with by-ref return value being a by-ref parameter' => [function & (& $baz) {
                 return $baz;
             }],
-            'function with by-ref parameter being overwritten' => [function (& $baz) {
+            'function with by-ref parameter being overwritten' => [function (int & $baz) {
                 $baz = 'foo';
             }],
             'function with by-ref use statement being overwritten' => [function () use (& $baz) {
