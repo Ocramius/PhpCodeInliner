@@ -237,8 +237,11 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'array cast of an array key' => [function (array $foo) {
                 (string) $foo['bar'];
             }],
-            'array cast of an array key' => [function (array $foo) {
+            'string concat of an array key' => [function (array $foo) {
                 $foo['bar'] . 'baz';
+            }],
+            'string append of an array key' => [function (array $foo) {
+                $foo['bar'] .= 'baz';
             }],
         ];
     }
