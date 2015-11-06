@@ -62,6 +62,14 @@ final class FunctionScopeIsolatingVisitorTest extends PHPUnit_Framework_TestCase
 
     public function testBeforeTraverseIsResettingTheCurrentSubScopeFilter()
     {
-        self::markTestIncomplete();
+        $this->visitor->beforeTraverse([]);
+        $this->visitor->enterNode(new Expr\Closure());
+
+        $this->visitor->beforeTraverse([]);
+
+        $node = new Node\Scalar\String_('foo');
+
+        $this->wrappedVisitor->expects($this->once())->method('enterNode')->with($node);
+        $this->visitor->enterNode($node);
     }
 }
