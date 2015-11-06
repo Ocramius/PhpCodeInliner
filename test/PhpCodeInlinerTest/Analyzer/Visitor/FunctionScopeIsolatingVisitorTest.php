@@ -60,6 +60,16 @@ final class FunctionScopeIsolatingVisitorTest extends PHPUnit_Framework_TestCase
         self::assertSame($nodesOut, $this->visitor->beforeTraverse($nodesIn));
     }
 
+    public function testAfterTraverseIsInvokingWrappedVisitor()
+    {
+        $nodesIn  = [$this->getMock(Node::class)];
+        $nodesOut = [$this->getMock(Node::class)];
+
+        $this->wrappedVisitor->expects(self::once())->method('afterTraverse')->with($nodesIn)->willReturn($nodesOut);
+
+        self::assertSame($nodesOut, $this->visitor->afterTraverse($nodesIn));
+    }
+
     public function testBeforeTraverseIsResettingTheCurrentSubScopeFilter()
     {
         $this->visitor->beforeTraverse([]);
