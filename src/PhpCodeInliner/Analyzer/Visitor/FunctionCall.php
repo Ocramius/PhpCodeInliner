@@ -49,4 +49,9 @@ final class FunctionCall
     {
         return new self();
     }
+
+    public function resolveFunctionName(array $variableValues)
+    {
+        return [];
+    }
 }
