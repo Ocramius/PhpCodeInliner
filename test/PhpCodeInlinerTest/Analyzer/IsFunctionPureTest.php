@@ -138,7 +138,7 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
 
                 return $sum($foo, $bar);
             }],
-            'static method call on a  pure static function' => [function (int $foo, int $bar) {
+            'static method call on a pure static function' => [function (int $foo, int $bar) {
                 return IsFunctionPureTest::staticSum($foo, $bar);
             }],
         ];
