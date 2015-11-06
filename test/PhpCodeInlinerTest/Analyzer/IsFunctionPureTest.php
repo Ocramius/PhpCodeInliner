@@ -209,14 +209,6 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'method call on object type' => [function (\stdClass $foo) {
                 $foo->bar();
             }],
-            'assignment of object type' => [function (\stdClass $foo) {
-                // note: this is a limitation due to being unable to track assignment types (for now):
-                $bar = $foo;
-            }],
-            'assignment of unknown type' => [function ($foo) {
-                // note: this is a limitation due to being unable to track assignment types (for now):
-                $bar = $foo;
-            }],
         ];
     }
 
