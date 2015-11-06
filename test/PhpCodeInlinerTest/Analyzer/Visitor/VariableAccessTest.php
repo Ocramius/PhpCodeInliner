@@ -45,6 +45,13 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 new Mul(new Variable('foo'), new Variable('bar'))
             )
         );
+        self::assertInstanceOf(
+            VariableAccess::class,
+            VariableAccess::fromVariableAndOperation(
+                new Node\Stmt\StaticVar('foo'),
+                new Mul(new Variable('foo'), new Variable('bar'))
+            )
+        );
     }
 
     /**
