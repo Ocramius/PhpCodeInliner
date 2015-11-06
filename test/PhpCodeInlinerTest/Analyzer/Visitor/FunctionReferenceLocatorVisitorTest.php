@@ -30,25 +30,52 @@ use PHPUnit_Framework_TestCase;
  */
 final class FunctionReferenceLocatorVisitorTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var FunctionReferenceLocatorVisitor
+     */
+    private $visitor;
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function setUp()
+    {
+        $this->visitor = new FunctionReferenceLocatorVisitor();
+    }
+
     public function testResetsCollectedFunctionCalls()
     {
-        $visitor = new FunctionReferenceLocatorVisitor();
-
-        $this->assertEmpty($visitor->getCollectedFunctionCalls());
+        $this->assertEmpty($this->visitor->getCollectedFunctionCalls());
 
         $node = new Node\Expr\FuncCall(new Node\Name('foo'));
 
-        $visitor->beforeTraverse([$node]);
+        $this->visitor->beforeTraverse([$node]);
 
-        $visitor->enterNode($node);
-        $visitor->leaveNode($node);
+        $this->visitor->enterNode($node);
+        $this->visitor->leaveNode($node);
 
-        $visitor->afterTraverse([$node]);
+        $this->visitor->afterTraverse([$node]);
 
-        $this->assertNotEmpty($visitor->getCollectedFunctionCalls());
+        $this->assertNotEmpty($this->visitor->getCollectedFunctionCalls());
 
-        $visitor->beforeTraverse([$node]);
+        $this->visitor->beforeTraverse([$node]);
 
-        $this->assertEmpty($visitor->getCollectedFunctionCalls());
+        $this->assertEmpty($this->visitor->getCollectedFunctionCalls());
+    }
+
+    public function testWillCollectFunctionCalls()
+    {
+        $node1 = new Node\Expr\FuncCall(new Node\Name('foo'));
+        $node2 = new Node\Expr\MethodCall(new Node\Expr\Variable('foo'), new Node\Name('bar'));
+        $node3 = new Node\Expr\StaticCall(new Node\Name('Foo'), new Node\Name('bar'));
+
+        $this->visitor->enterNode($node1);
+        $this->visitor->enterNode($node2);
+        $this->visitor->enterNode($node3);
+        $this->visitor->leaveNode($node3);
+        $this->visitor->leaveNode($node2);
+        $this->visitor->leaveNode($node1);
+
+        $this->assertCount(3, $this->visitor->getCollectedFunctionCalls());
     }
 }
