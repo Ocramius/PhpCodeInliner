@@ -75,6 +75,22 @@ final class VariableAccess
             return false;
         }
 
+        if (
+            (
+                $this->operation instanceof Node\Expr\BinaryOp\Concat
+                || $this->operation instanceof Node\Expr\AssignOp\Concat
+            )
+            && ! $this->isScalarType($variableTypes)) {
+            return true;
+        }
+
+        if (
+            $this->operation instanceof Node\Expr\BinaryOp
+            || $this->operation instanceof Node\Expr\AssignOp
+        ) {
+            return false;
+        }
+
         return true;
     }
 
