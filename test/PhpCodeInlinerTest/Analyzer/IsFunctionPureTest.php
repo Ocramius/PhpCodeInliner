@@ -251,14 +251,4 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
     {
         return $a + $b;
     }
-
-//    public function testFoo()
-//    {
-//        $ast = (new ParserFactory())
-//            ->create(ParserFactory::ONLY_PHP7)
-//            ->parse('<?php $foo = $bar->baz; $bar->baz = $foo;');
-//
-//        var_dump($ast);
-//        die();
-//    }
 }
