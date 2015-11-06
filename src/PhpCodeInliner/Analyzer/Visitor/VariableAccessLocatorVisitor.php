@@ -77,9 +77,9 @@ final class VariableAccessLocatorVisitor extends NodeVisitorAbstract
                 $node,
                 end($this->lastVisitedNodes) ?: null
             );
-
-            $this->lastVisitedNodes[] = $node;
         }
+
+        $this->lastVisitedNodes[] = $node;
     }
 
     /**
