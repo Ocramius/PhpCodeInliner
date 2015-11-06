@@ -1,7 +1,3 @@
----
-title: Contributing
----
-
 # Contributing
 
  * Coding standard for the project is [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
