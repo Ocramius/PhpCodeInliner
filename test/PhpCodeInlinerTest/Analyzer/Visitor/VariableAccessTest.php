@@ -200,6 +200,24 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 'foo',
                 new Expr\BinaryOp\Concat(new Variable('foo'), new Variable('bar')),
             ],
+            'string append, scalar type (explicit)' => [
+                false,
+                ['foo' => 'int'],
+                'foo',
+                new Expr\AssignOp\Concat(new Variable('foo'), new Variable('bar')),
+            ],
+            'string append, object type (explicit)' => [
+                true,
+                ['foo' => 'stdClass'],
+                'foo',
+                new Expr\AssignOp\Concat(new Variable('foo'), new Variable('bar')),
+            ],
+            'string append, mixed type (implicit)' => [
+                true,
+                [],
+                'foo',
+                new Expr\AssignOp\Concat(new Variable('foo'), new Variable('bar')),
+            ],
         ];
     }
 }
