@@ -33,6 +33,7 @@ use PhpParser\NodeVisitorAbstract;
  */
 final class VariableAccess
 {
+    const GLOBAL_VAR   = 'GLOBALS';
     const SCALAR_TYPES = ['array', 'int', 'float', 'string', 'bool'];
 
     /**
@@ -63,6 +64,10 @@ final class VariableAccess
      */
     public function canCauseSideEffects(array $variableTypes) : bool
     {
+        if (self::GLOBAL_VAR === $this->variable->name) {
+            return true;
+        }
+
         // @todo any of the following operations on array sub-keys is also to be banished, so we need to consider
         //       any operation on any array key as on "mixed" and re-run this check.
         if (null === $this->operation) {
