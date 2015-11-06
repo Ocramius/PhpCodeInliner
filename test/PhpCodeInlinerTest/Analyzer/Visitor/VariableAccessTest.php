@@ -171,13 +171,13 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 new Expr\ArrayDimFetch(new Variable('foo'), new Node\Scalar\String_('bar')),
             ],
             'method call expression, scalar type (explicit)' => [
-                false,
+                true,
                 ['foo' => 'int'],
                 'foo',
                 new Expr\MethodCall(new Variable('foo'), 'bar'),
             ],
             'method call expression, object type (explicit)' => [
-                false,
+                true,
                 ['foo' => 'stdClass'],
                 'foo',
                 new Expr\MethodCall(new Variable('foo'), 'bar'),
@@ -207,13 +207,13 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 new Expr\BinaryOp\Mul(new Variable('foo'), new Variable('bar')),
             ],
             'multiplication, object type (explicit)' => [
-                true,
+                false,
                 ['foo' => 'stdClass'],
                 'foo',
                 new Expr\BinaryOp\Mul(new Variable('foo'), new Variable('bar')),
             ],
             'multiplication, mixed type (implicit)' => [
-                true,
+                false,
                 [],
                 'foo',
                 new Expr\BinaryOp\Mul(new Variable('foo'), new Variable('bar')),
