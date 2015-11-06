@@ -47,6 +47,9 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @dataProvider sideEffectCasesProvider
+     */
     public function testChecksIfAccessCanCauseSideEffects(
         bool $mayCauseSideEffects,
         array $variableTypes,
@@ -60,7 +63,7 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function sideEffectCasesProvider()
+    public function sideEffectCasesProvider() : array
     {
         return [
             'simple variable access, mixed type (implicit)' => [
