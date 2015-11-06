@@ -120,6 +120,7 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'assignment of int type' => [function (int $foo) {
                 $bar = $foo;
             }],
+            // @todo incomplete from here on
             'method call on a pure function' => [function (int $foo, int $bar) {
                 return $this->sum($foo, $bar);
             }],
