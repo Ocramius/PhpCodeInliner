@@ -101,6 +101,18 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'function with concatenation of int type' => [function (int $foo) {
                 return $foo . 'bar';
             }],
+            'function with multiplication of int type' => [function (int $foo) {
+                return $foo * 2;
+            }],
+            'function with multiplication of string type' => [function (string $foo) {
+                return $foo * 2;
+            }],
+            'function with multiplication of unknown type' => [function ($foo) {
+                return $foo * 2;
+            }],
+            'function with multiplication of object type' => [function (\stdClass $foo) {
+                return $foo * 2;
+            }],
         ];
     }
 
