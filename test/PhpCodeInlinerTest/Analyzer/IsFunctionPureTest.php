@@ -166,12 +166,26 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'array access on object type' => [function (\stdClass $foo) {
                 $foo['bar'];
             }],
-            // note: this is a limitation due to being unable to track assignment types (for now):
+            'property access on int type' => [function (int $foo) {
+                // causes cast (because PHP is dumb)
+                $foo->bar;
+            }],
+            'property access on string type' => [function (string $foo) {
+                // causes cast (because PHP is dumb)
+                $foo->bar;
+            }],
+            'property access on unknown type' => [function ($foo) {
+                $foo->bar;
+            }],
+            'property access on object type' => [function (\stdClass $foo) {
+                $foo->bar;
+            }],
             'assignment of object type' => [function (\stdClass $foo) {
+                // note: this is a limitation due to being unable to track assignment types (for now):
                 $bar = $foo;
             }],
-            // note: this is a limitation due to being unable to track assignment types (for now):
             'assignment of unknown type' => [function ($foo) {
+                // note: this is a limitation due to being unable to track assignment types (for now):
                 $bar = $foo;
             }],
         ];
