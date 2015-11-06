@@ -63,6 +63,8 @@ final class VariableAccess
      */
     public function canCauseSideEffects(array $variableTypes) : bool
     {
+        // @todo any of the following operations on array sub-keys is also to be banished, so we need to consider
+        //       any operation on any array key as on "mixed" and re-run this check.
         if (null === $this->operation) {
             return false;
         }
