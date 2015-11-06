@@ -32,7 +32,7 @@ use PHPUnit_Framework_TestCase;
  */
 final class VariableAccessTest extends PHPUnit_Framework_TestCase
 {
-    public static function testVariableAccessConstructor()
+    public function testVariableAccessConstructor()
     {
         self::assertInstanceOf(
             VariableAccess::class,
@@ -52,6 +52,20 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 new Mul(new Variable('foo'), new Variable('bar'))
             )
         );
+    }
+
+    public function testVariableAccessConstructorRejectsNonObjects()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        VariableAccess::fromVariableAndOperation('foo');
+    }
+
+    public function testVariableAccessConstructorRejectsInvalidObjects()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        VariableAccess::fromVariableAndOperation(new \stdClass());
     }
 
     /**
