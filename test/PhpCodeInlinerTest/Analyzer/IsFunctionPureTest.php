@@ -66,6 +66,9 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'function with return value being an expression with the parameters' => [function ($a, $b) {
                 return $a + $b;
             }],
+            'function with return value being an use statement value' => [function () use ($baz) {
+                return $baz;
+            }],
         ];
     }
 
