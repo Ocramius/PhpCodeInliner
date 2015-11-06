@@ -57,7 +57,7 @@ final class ReturnStatementLocatorVisitor extends NodeVisitorAbstract
             return;
         }
 
-        if ($node instanceof Closure) {
+        if ($node instanceof Closure || $node instanceof Class_) {
             $this->currentAnonymousConstruct = $node;
 
             return;
