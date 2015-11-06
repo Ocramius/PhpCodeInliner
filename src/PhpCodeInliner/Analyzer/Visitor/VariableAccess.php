@@ -33,7 +33,7 @@ use PhpParser\NodeVisitorAbstract;
  */
 final class VariableAccess
 {
-    const SCALAR_TYPES = ['int', 'float', 'string', 'bool'];
+    const SCALAR_TYPES = ['array', 'int', 'float', 'string', 'bool'];
 
     /**
      * @var Variable
