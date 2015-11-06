@@ -228,6 +228,18 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'method call on unknown static method' => [function () {
                 IsFunctionPureTest::unknownStaticMethod();
             }],
+            'access to sub-key of an array' => [function (array $foo) {
+                $foo['bar']['baz'];
+            }],
+            'access to property of an array key' => [function (array $foo) {
+                $foo['bar']->baz;
+            }],
+            'array cast of an array key' => [function (array $foo) {
+                (string) $foo['bar'];
+            }],
+            'array cast of an array key' => [function (array $foo) {
+                $foo['bar'] . 'baz';
+            }],
         ];
     }
 
