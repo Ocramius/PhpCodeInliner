@@ -54,6 +54,18 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testVariableAccessViaStaticVar()
+    {
+        self::assertInstanceOf(
+            VariableAccess::class,
+            VariableAccess::fromStaticVariableAndOperations(
+                new Node\Stmt\StaticVar('foo'),
+                new Mul(new Variable('foo'), new Variable('bar')),
+                new Mul(new Variable('foo'), new Variable('bar'))
+            )
+        );
+    }
+
     public function testVariableAccessConstructorRejectsNonObjects()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
