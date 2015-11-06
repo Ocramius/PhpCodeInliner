@@ -121,6 +121,48 @@ final class FunctionScopeIsolatingVisitorTest extends PHPUnit_Framework_TestCase
         $this->assertSame($nodeOut2, $this->visitor->leaveNode($subScopeNode));
     }
 
+    /**
+     * @dataProvider subScopeNodesProvider
+     */
+    public function testWillNotEnterNodesLowerThanTheSubScopeNode(Node $subScopeNode)
+    {
+        /* @var $outerScopeNode Node */
+        $outerScopeNode   = $this->getMock(Node::class);
+        /* @var $innerScopeNode Node */
+        $innerScopeNode   = $this->getMock(Node::class);
+        $nodeReplacement1 = $this->getMock(Node::class);
+        $nodeReplacement2 = $this->getMock(Node::class);
+        $nodeReplacement3 = $this->getMock(Node::class);
+        $nodeReplacement4 = $this->getMock(Node::class);
+
+        $this
+            ->wrappedVisitor
+            ->expects(self::exactly(2))
+            ->method('enterNode')
+            ->with(self::logicalOr($outerScopeNode, $subScopeNode))
+            ->will($this->returnValueMap([
+                [$outerScopeNode, $nodeReplacement1],
+                [$subScopeNode, $nodeReplacement2],
+            ]));
+
+        $this
+            ->wrappedVisitor
+            ->expects(self::exactly(2))
+            ->method('leaveNode')
+            ->with(self::logicalOr($outerScopeNode, $subScopeNode))
+            ->will($this->returnValueMap([
+                [$outerScopeNode, $nodeReplacement3],
+                [$subScopeNode, $nodeReplacement4],
+            ]));
+
+        $this->assertSame($nodeReplacement1, $this->visitor->enterNode($outerScopeNode));
+        $this->assertSame($nodeReplacement2, $this->visitor->enterNode($subScopeNode));
+        $this->assertNull($this->visitor->enterNode($innerScopeNode));
+        $this->assertNull($this->visitor->leaveNode($innerScopeNode));
+        $this->assertSame($nodeReplacement4, $this->visitor->leaveNode($subScopeNode));
+        $this->assertSame($nodeReplacement3, $this->visitor->leaveNode($outerScopeNode));
+    }
+
     public function subScopeNodesProvider() : array
     {
         return [
