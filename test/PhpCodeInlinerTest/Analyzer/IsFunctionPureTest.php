@@ -77,6 +77,9 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             'function with return value being an use statement value' => [function () use ($baz) {
                 return $baz;
             }],
+            'function with string cast of string type' => [function (string $foo) {
+                return (string) $foo;
+            }],
         ];
     }
 
@@ -99,6 +102,12 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
             }],
             'function with by-ref use statement being overwritten' => [function () use (& $baz) {
                 $baz = 'foo';
+            }],
+            'function with string cast of unknown type' => [function ($foo) {
+                return (string) $foo;
+            }],
+            'function with string cast of object type' => [function (\stdClass $foo) {
+                return (string) $foo;
             }],
         ];
     }
