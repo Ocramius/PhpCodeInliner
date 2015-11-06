@@ -290,6 +290,12 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 'foo',
                 new Node\Stmt\Return_(new Variable('foo')),
             ],
+            'assignment statement, mixed type (implicit)' => [
+                false,
+                [],
+                'foo',
+                new Expr\Assign(new Variable('foo'), new Variable('foo')),
+            ],
         ];
     }
 }
