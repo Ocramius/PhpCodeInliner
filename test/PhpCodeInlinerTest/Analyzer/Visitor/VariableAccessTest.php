@@ -369,6 +369,16 @@ final class VariableAccessTest extends PHPUnit_Framework_TestCase
                 ),
                 new Expr\ArrayDimFetch(new Variable('foo'), new Node\Scalar\String_('bar')),
             ],
+            'property access on array key on array hinted variable' => [
+                true,
+                ['foo' => 'array'],
+                'foo',
+                new Expr\PropertyFetch(
+                    new Expr\ArrayDimFetch(new Variable('foo'), new Node\Scalar\String_('bar')),
+                    'baz'
+                ),
+                new Expr\ArrayDimFetch(new Variable('foo'), new Node\Scalar\String_('bar')),
+            ],
         ];
     }
 }
