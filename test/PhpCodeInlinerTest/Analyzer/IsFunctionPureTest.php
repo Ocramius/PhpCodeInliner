@@ -66,55 +66,55 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
                 return 'baz';
             }],
             'function with return constant expression' => [function () {
-                return 1 + 1;
+                1 + 1;
             }],
             'function with return value being a parameter' => [function ($returned) {
-                return $returned;
+                $returned;
             }],
             'function with return value being an expression with the parameters' => [function ($a, $b) {
-                return $a + $b;
+                $a + $b;
             }],
             'function with return value being an use statement value' => [function () use ($baz) {
-                return $baz;
+                $baz;
             }],
             'function with string cast of string type' => [function (string $foo) {
-                return (string) $foo;
+                (string) $foo;
             }],
             'function with int cast of int type' => [function (int $foo) {
-                return (int) $foo;
+                (int) $foo;
             }],
             'function with int cast of unknown type' => [function ($foo) {
-                return (int) $foo;
+                (int) $foo;
             }],
             'function with int cast of object type' => [function ($foo) {
-                return (int) $foo;
+                (int) $foo;
             }],
             'function with array cast of unknown type' => [function ($foo) {
-                return (array) $foo;
+                (array) $foo;
             }],
             'function with array cast of object type' => [function (\stdClass $foo) {
-                return (array) $foo;
+                (array) $foo;
             }],
             'function with concatenation of string type' => [function (string $foo) {
-                return $foo . 'bar';
+                $foo . 'bar';
             }],
             'function with concatenation of int type' => [function (int $foo) {
-                return $foo . 'bar';
+                $foo . 'bar';
             }],
             'function with multiplication of int type' => [function (int $foo) {
-                return $foo * 2;
+                $foo * 2;
             }],
             'function with multiplication of string type' => [function (string $foo) {
-                return $foo * 2;
+                $foo * 2;
             }],
             'function with multiplication of unknown type' => [function ($foo) {
-                return $foo * 2;
+                $foo * 2;
             }],
             'function with multiplication of object type' => [function (\stdClass $foo) {
-                return $foo * 2;
+                $foo * 2;
             }],
             'array access on array type' => [function (array $foo) {
-                return $foo['bar'];
+                $foo['bar'];
             }],
         ];
     }
@@ -140,22 +140,22 @@ final class IsFunctionPureTest extends PHPUnit_Framework_TestCase
                 $baz = 'foo';
             }],
             'function with string cast of unknown type' => [function ($foo) {
-                return (string) $foo;
+                (string) $foo;
             }],
             'function with string cast of object type' => [function (\stdClass $foo) {
-                return (string) $foo;
+                (string) $foo;
             }],
             'function with concatenation of unknown type' => [function ($foo) {
-                return $foo . 'bar';
+                $foo . 'bar';
             }],
             'function with concatenation of object type' => [function (\stdClass $foo) {
-                return $foo . 'bar';
+                $foo . 'bar';
             }],
             'array access on unknown type' => [function ($foo) {
-                return $foo['bar'];
+                $foo['bar'];
             }],
             'array access on object type' => [function (\stdClass $foo) {
-                return $foo['bar'];
+                $foo['bar'];
             }],
         ];
     }
