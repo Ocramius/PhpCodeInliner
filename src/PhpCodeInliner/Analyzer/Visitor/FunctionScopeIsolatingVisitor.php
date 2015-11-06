@@ -23,7 +23,6 @@ namespace PhpCodeInliner\Analyzer\Visitor;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\Return_;
 use PhpParser\NodeVisitor;
 
 /**

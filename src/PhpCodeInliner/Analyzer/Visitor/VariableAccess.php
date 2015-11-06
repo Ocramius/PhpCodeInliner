@@ -21,12 +21,9 @@ declare(strict_types=1);
 namespace PhpCodeInliner\Analyzer\Visitor;
 
 use PhpParser\Node;
-use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Expr\Variable;
-use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Stmt\StaticVar;
-use PhpParser\NodeVisitorAbstract;
 
 /**
  * @internal this object is used to represent an access to a variable, and to describe
