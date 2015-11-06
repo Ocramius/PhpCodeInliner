@@ -103,7 +103,7 @@ final class VariableAccess
             return false;
         }
 
-        return ! $this->operation instanceof Return_;
+        return ! ($this->operation instanceof Return_ || $this->operation instanceof Node\Expr\Assign);
     }
 
     private function isScalarType(array $variableTypes) : bool
