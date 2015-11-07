@@ -77,4 +77,9 @@ final class FunctionReference
     {
         return ($this->className ? $this->className . '::' : '') . $this->functionName;
     }
+
+    public function getFunctionAst(/* pass in AST locator here */) : Node\FunctionLike
+    {
+        // @todo to be done
+    }
 }
