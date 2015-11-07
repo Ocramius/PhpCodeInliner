@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace PhpCodeInlinerTest\Analyzer\Visitor;
 
 use PhpCodeInliner\Analyzer\Visitor\FunctionCall;
+use PhpCodeInliner\Analyzer\Visitor\FunctionReference;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PHPUnit_Framework_TestCase;
@@ -77,7 +78,16 @@ final class FunctionCallTest extends PHPUnit_Framework_TestCase
             throw new \InvalidArgumentException(sprintf('Unrecognized node of type "%s"', get_class($node)));
         }
 
-        $this->assertSame($expectedType, $functionCall->resolveFunctionName($variableValues));
+        if (! $expectedType) {
+            $this->assertNull($functionCall->buildReference($variableValues));
+
+            return;
+        }
+
+        $reference = $functionCall->buildReference($variableValues);
+
+        $this->assertInstanceOf(FunctionReference::class, $reference);
+        $this->assertSame(implode('::', $expectedType), $reference->getName());
     }
 
     public function resolvedCallsDataProvider()
@@ -85,11 +95,6 @@ final class FunctionCallTest extends PHPUnit_Framework_TestCase
         return [
             'static call with string class name' => [
                 new Expr\StaticCall(new Node\Name('Foo'), 'bar'),
-                [],
-                ['Foo', 'bar'],
-            ],
-            'static call with static class name' => [
-                new Expr\StaticCall(new Node\Name('Foo'), new Node\Name('bar')),
                 [],
                 ['Foo', 'bar'],
             ],
