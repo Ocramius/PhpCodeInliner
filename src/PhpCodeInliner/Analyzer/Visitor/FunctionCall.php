@@ -21,6 +21,9 @@ declare(strict_types=1);
 namespace PhpCodeInliner\Analyzer\Visitor;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Stmt\StaticVar;
@@ -28,30 +31,140 @@ use PhpParser\Node\Stmt\StaticVar;
 /**
  * @internal this object is used to represent a function/method call, and to resolve to
  *           that function/method call body (when possible)
+ *
+ * @todo may split into 3 separate VOs
  */
 final class FunctionCall
 {
+    /**
+     * @var StaticCall|null
+     */
+    private $staticCall;
+
+    /**
+     * @var MethodCall|null
+     */
+    private $instanceCall;
+
+    /**
+     * @var FuncCall|null
+     */
+    private $funcCall;
+
     private function __construct()
     {
     }
 
-    public static function fromStaticCall(Node\Expr\StaticCall $staticCall) : self
+    public static function fromStaticCall(StaticCall $staticCall) : self
     {
-        return new self();
+        $instance = new self();
+
+        $instance->staticCall = $staticCall;
+
+        return $instance;
     }
 
-    public static function fromInstanceCall(Node\Expr\MethodCall $staticCall) : self
+    public static function fromInstanceCall(MethodCall $instanceCall) : self
     {
-        return new self();
+        $instance = new self();
+
+        $instance->instanceCall = $instanceCall;
+
+        return $instance;
     }
 
-    public static function fromFunctionCall(Node\Expr\FuncCall $staticCall) : self
+    public static function fromFunctionCall(FuncCall $funcCall) : self
     {
-        return new self();
+        $instance = new self();
+
+        $instance->funcCall = $funcCall;
+
+        return $instance;
     }
 
-    public function resolveFunctionName(array $variableValues)
+    /**
+     * @param array $variableValueTypes
+     *
+     * @return null|FunctionReference
+     */
+    public function buildReference(array $variableValueTypes)
     {
-        return [];
+        return $this->resolveFunctionReference($variableValueTypes)
+            ?? $this->resolveStaticFunctionCall($variableValueTypes)
+            ?? $this->resolveInstanceCall($variableValueTypes);
+    }
+
+    /**
+     * @param array $variableValueTypes
+     *
+     * @return null|FunctionReference
+     */
+    private function resolveFunctionReference(array $variableValueTypes)
+    {
+        if (! $this->funcCall) {
+            return null;
+        }
+
+        $functionName = $this->funcCall->name;
+
+        if (
+            $functionName instanceof Variable
+            && ($functionVariableName = $functionName->name)
+            && isset($variableValueTypes[$functionVariableName])
+        ) {
+            // @todo wtf are `$variableValueTypes` here then? Should they be maps of reflection references?
+            return FunctionReference::fromFunctionName($variableValueTypes[$functionVariableName]);
+        }
+
+        if ($functionName instanceof Node\Name) {
+            return FunctionReference::fromFunctionName((string) $functionName);
+        }
+    }
+
+    /**
+     * @return null|FunctionReference
+     */
+    private function resolveStaticFunctionCall(array $variableValueTypes)
+    {
+        if (! $this->staticCall) {
+            return null;
+        }
+
+        $class = $this->staticCall->class;
+        $name  = $this->staticCall->name;
+
+        // note: we currently do not support expression evaluation
+        if (! ($class instanceof Node\Name && is_string($name))) {
+            return null;
+        }
+
+        return FunctionReference::fromClassAndMethodName((string) $class, $name);
+    }
+
+    /**
+     * @return null|FunctionReference
+     */
+    private function resolveInstanceCall(array $variableValueTypes)
+    {
+        if (! $this->instanceCall) {
+            return null;
+        }
+
+        // note: we currently do not support expression evaluation, and only support `$this`
+
+        $object     = $this->instanceCall->var;
+        $methodName = $this->instanceCall->name;
+
+        if (! ($object instanceof Variable && is_string($methodName))) {
+            return null;
+        }
+
+        $objectType = $variableValueTypes[$object->name] ?? null;
+
+        if (! is_string($objectType)) {
+            return null;
+        }
+
+        return FunctionReference::fromClassAndMethodName($objectType, $methodName);
     }
 }
