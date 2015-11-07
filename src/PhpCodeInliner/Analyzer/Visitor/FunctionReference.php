@@ -75,6 +75,7 @@ final class FunctionReference
 
     public function getName() : string
     {
+        // @todo to be removed: functions don't always have a name anyway
         return ($this->className ? $this->className . '::' : '') . $this->functionName;
     }
 
