@@ -30,6 +30,16 @@ use PhpParser\Node\Stmt\StaticVar;
 
 final class FunctionReference
 {
+    /**
+     * @var string|null
+     */
+    private $className;
+
+    /**
+     * @var string
+     */
+    private $functionName;
+
     private function __construct()
     {
     }
@@ -37,16 +47,34 @@ final class FunctionReference
     public static function fromClosure(string $functionName) : self
     {
         // @todo incomplete?
-        return new self();
+        $instance = new self();
+
+        $instance->functionName = $functionName;
+
+        return $instance;
     }
 
     public static function fromFunctionName(string $functionName) : self
     {
-        return new self();
+        $instance = new self();
+
+        $instance->functionName = $functionName;
+
+        return $instance;
     }
 
     public static function fromClassAndMethodName(string $className, string $methodName) : self
     {
-        return new self();
+        $instance = new self();
+
+        $instance->className    = $className;
+        $instance->functionName = $methodName;
+
+        return $instance;
+    }
+
+    public function getName() : string
+    {
+        return ($this->className ? $this->className . '::' : '') . $this->functionName;
     }
 }
